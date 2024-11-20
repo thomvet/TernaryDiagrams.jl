@@ -1,5 +1,5 @@
 Makie.@Block TernaryAxis begin
-    # "The Scene of the GeoAxis, which holds all plots."
+    # "The Scene of the TernaryAxis, which holds all plots."
     scene::Scene
     # "Targeted limits in input space"
     targetlimits::Observable{Rect2d}
@@ -164,18 +164,13 @@ end
 
 function initialize_block!(axis::TernaryAxis)
     scene = setup_axis!(axis)
-
     draw_ticks!(axis)
-
-
 end
 
 function draw_ticks!(axis::TernaryAxis)
     topscene = axis.blockscene
     scene = axis.scene
 
-    lift(axis.finallimits, axis.scene.px_area, axis.xticks, axis.yticks, axis.zticks, axis....) do ...
-
-    end
+    #lift(axis.finallimits, axis.scene.px_area, axis.xticks, axis.yticks, axis.zticks, axis....) do ... end
 end
 

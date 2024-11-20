@@ -75,9 +75,9 @@ function Makie.bracket_bezierpath(::Val{:arrow}, p1, p2, d, width)
 
     return b, p12
 end
-Makie.data_limits(pl::Bracket) = mapreduce(union, pl[1][]) do points
-    Rect3f([points...])
-end
+# Makie.data_limits(pl::Bracket) = mapreduce(union, pl[1][]) do points
+#     Rect3f([points...])
+# end
 
 triangle_gridline(f1, dim::Int) = triangle_gridline(f1, Val(dim))
 

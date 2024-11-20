@@ -1,7 +1,12 @@
 module TernaryDiagrams
 
-using Makie, LinearAlgebra, ColorSchemes, DocStringExtensions
+using LinearAlgebra, ColorSchemes, DocStringExtensions, Makie
+using Makie: AbstractAxis, @Block, make_block_docstring, inherit, automatic
+using Makie: AngularTicks, Vec2d, Rect2d, Observables, Polar, GeometryBasics, Rect3d
+using Makie: transformationmatrix, get_ticks, get_minor_tickvalues, Polygon, rotate!, GridLayoutBase
+using Makie: orthographicprojection, string_boundingbox, update_boundingbox, reset_limits!
 import GeometricalPredicates, VoronoiDelaunay, Base
+using Base: RefValue
 const vd = VoronoiDelaunay
 const gp = GeometricalPredicates
 
@@ -40,56 +45,60 @@ include("contour_funcs.jl")
 
 # plot recipes, after recipe macro, include plot function
 
-_default_formatter = tick -> string.(round.(tick, digits = 2))
+#_default_formatter = tick -> string.(round.(tick, digits = 2))
 
-using Makie: inherit, automatic
+# using Makie: inherit, automatic
 
-function Makie.inherit(scene, attrs::Tuple, default)
-    next_val::Any = scene.theme
-    for attr in attrs
-        if next_val isa Attributes && haskey(next_val, attr)
-            next_val = next_val[attr]
-        else
-            return default
-        end
-    end
-    return next_val
-end
-Makie.inherit(::Nothing, attrs::Tuple, default) = default
+# function Makie.inherit(scene, attrs::Tuple, default)
+#     next_val::Any = scene.theme
+#     for attr in attrs
+#         if next_val isa Attributes && haskey(next_val, attr)
+#             next_val = next_val[attr]
+#         else
+#             return default
+#         end
+#     end
+#     return next_val
+# end
+# Makie.inherit(::Nothing, attrs::Tuple, default) = default
 
 
-"""
-TernaryAxis
+# """
+# TernaryAxis
 
-Draw the base triangle without any data to form a barycentric axis. Use the
-"adjustment" kwargs to adjust various formatting options.
+# Draw the base triangle without any data to form a barycentric axis. Use the
+# "adjustment" kwargs to adjust various formatting options.
 
-## Attributes
-$(Makie.ATTRIBUTES)
-"""
-Makie.@recipe(TernaryAxis) do scene
-    Attributes(
-        xlabel = "labelx",
-        ylabel = "labely",
-        zlabel = "labelz",
-        fonts = inherit(scene, :fonts, Attributes(regular = Makie.defaultfont(), bold = "TeX Gyre Heros Makie Bold")),
-        label_fontsize = 18,
-        label_vertex_vertical_adjustment = 0.05,
-        label_edge_vertical_adjustment = 0.10,
-        label_edge_vertical_arrow_adjustment = 0.08,
-        labelx_arrow = nothing,
-        labely_arrow = nothing,
-        labelz_arrow = nothing,
-        arrow_scale = 0.4,
-        arrow_label_rotation_adjustment = 0.85,
-        arrow_label_fontsize = 14,
-        tick_fontsize = 10,
-        grid_line_color = :grey,
-        grid_line_width = 0.5,
-        hide_vertex_labels = false,
-        hide_triangle_labels = false,
-    )
-end
+# ## Attributes
+# $(Makie.ATTRIBUTES)
+# """
+# Makie.@recipe(TernaryAxis) do scene
+#     Attributes(
+#         xlabel = "labelx",
+#         ylabel = "labely",
+#         zlabel = "labelz",
+#         fonts = inherit(scene, :fonts, Attributes(regular = Makie.defaultfont(), bold = "TeX Gyre Heros Makie Bold")),
+#         label_fontsize = 18,
+#         label_vertex_vertical_adjustment = 0.05,
+#         label_edge_vertical_adjustment = 0.10,
+#         label_edge_vertical_arrow_adjustment = 0.08,
+#         labelx_arrow = nothing,
+#         labely_arrow = nothing,
+#         labelz_arrow = nothing,
+#         arrow_scale = 0.4,
+#         arrow_label_rotation_adjustment = 0.85,
+#         arrow_label_fontsize = 14,
+#         tick_fontsize = 10,
+#         grid_line_color = :grey,
+#         grid_line_width = 0.5,
+#         hide_vertex_labels = false,
+#         hide_triangle_labels = false,
+#     )
+# end
+
+include("transformation.jl")
+include("ternaryaxis_type.jl")
+include("ternaryaxis_block.jl")
 
 include("axis.jl")
 
